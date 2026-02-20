@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>MoovDisplay</title>
+<style>
+body { margin:0; background:black; overflow:hidden; }
+img { width:100%; height:100vh; object-fit:contain; }
+</style>
+</head>
+<body>
+
+<img id="slide">
+
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbyRJMR0vg7PAVINbbkwIymm9z1XWeQ8K-rk4rKJu-aAfnIyzqewgYlz6jwygRe9wNPm/exec";
+
+let images = [];
+let index = 0;
+
+async function fetchImages() {
+  const response = await fetch(API_URL);
+  images = await response.json();
+}
+
+function showSlide() {
+  if (images.length === 0) return;
+  document.getElementById("slide").src = images[index].url;
+  index = (index + 1) % images.length;
+}
+
+async function start() {
+  await fetchImages();
+  showSlide();
+  setInterval(showSlide, 5000);
+  setInterval(fetchImages, 60000); // actualise toutes les 60s
+}
+
+start();
+</script>
+
+</body>
+</html>
